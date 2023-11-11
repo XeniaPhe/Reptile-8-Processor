@@ -2334,10 +2334,11 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
     <wire from="(300,190)" to="(300,200)"/>
     <wire from="(380,260)" to="(380,270)"/>
     <wire from="(260,280)" to="(260,300)"/>
-    <wire from="(300,250)" to="(300,270)"/>
     <wire from="(430,160)" to="(430,180)"/>
-    <wire from="(260,200)" to="(260,280)"/>
+    <wire from="(260,250)" to="(260,280)"/>
+    <wire from="(290,240)" to="(330,240)"/>
     <wire from="(230,300)" to="(260,300)"/>
+    <wire from="(290,270)" to="(380,270)"/>
     <wire from="(280,150)" to="(440,150)"/>
     <wire from="(280,180)" to="(310,180)"/>
     <wire from="(280,190)" to="(300,190)"/>
@@ -2350,11 +2351,10 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
     <wire from="(420,250)" to="(430,250)"/>
     <wire from="(280,170)" to="(420,170)"/>
     <wire from="(260,280)" to="(270,280)"/>
-    <wire from="(320,240)" to="(330,240)"/>
-    <wire from="(290,270)" to="(300,270)"/>
     <wire from="(300,200)" to="(310,200)"/>
+    <wire from="(260,250)" to="(270,250)"/>
     <wire from="(380,260)" to="(390,260)"/>
-    <wire from="(300,270)" to="(380,270)"/>
+    <wire from="(260,200)" to="(260,250)"/>
     <wire from="(260,300)" to="(390,300)"/>
     <comp lib="0" loc="(370,240)" name="Bit Extender">
       <a name="in_width" val="3"/>
@@ -2377,12 +2377,12 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
       <a name="bit3" val="none"/>
       <a name="bit4" val="none"/>
       <a name="bit5" val="none"/>
-      <a name="bit6" val="none"/>
-      <a name="bit7" val="none"/>
+      <a name="bit6" val="0"/>
+      <a name="bit7" val="0"/>
       <a name="bit8" val="0"/>
       <a name="bit9" val="0"/>
-      <a name="bit10" val="0"/>
-      <a name="bit11" val="0"/>
+      <a name="bit10" val="none"/>
+      <a name="bit11" val="none"/>
     </comp>
     <comp lib="0" loc="(440,150)" name="Pin">
       <a name="facing" val="west"/>
@@ -2391,14 +2391,6 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
       <a name="label" val="dr"/>
       <a name="labelloc" val="east"/>
       <a name="labelfont" val="Comic Sans MS plain 12"/>
-    </comp>
-    <comp lib="0" loc="(300,250)" name="Splitter">
-      <a name="fanout" val="1"/>
-      <a name="incoming" val="4"/>
-      <a name="bit0" val="none"/>
-      <a name="bit1" val="0"/>
-      <a name="bit2" val="0"/>
-      <a name="bit3" val="0"/>
     </comp>
     <comp lib="0" loc="(430,250)" name="Pin">
       <a name="facing" val="west"/>
@@ -2449,6 +2441,22 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
       <a name="bit9" val="none"/>
       <a name="bit10" val="3"/>
       <a name="bit11" val="4"/>
+    </comp>
+    <comp lib="0" loc="(270,250)" name="Splitter">
+      <a name="fanout" val="1"/>
+      <a name="incoming" val="12"/>
+      <a name="bit0" val="none"/>
+      <a name="bit1" val="none"/>
+      <a name="bit2" val="none"/>
+      <a name="bit3" val="none"/>
+      <a name="bit4" val="none"/>
+      <a name="bit5" val="none"/>
+      <a name="bit6" val="none"/>
+      <a name="bit7" val="none"/>
+      <a name="bit8" val="none"/>
+      <a name="bit9" val="0"/>
+      <a name="bit10" val="0"/>
+      <a name="bit11" val="0"/>
     </comp>
     <comp lib="1" loc="(340,190)" name="AND Gate">
       <a name="size" val="30"/>
