@@ -29,5 +29,3 @@ loop 	sub 3 2 4
 loopend ldi 4 sum
 	st 4 5
 inf	jmp inf
-	
-	

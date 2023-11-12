@@ -77,7 +77,6 @@ int main(int argc, char *argv[])
     struct label_or_variable lditable[100];
     int noofldis=0;
 
-
     fp = fopen(argv[1],"r");    //first command line argument is the name of the program
 
     if (fp != NULL)
@@ -87,11 +86,10 @@ int main(int argc, char *argv[])
             token=strtok(line,"\n\t\r ");
             if (strcmp(token,".code")==0 )
                 break;
-        } 
+        }
         while(fgets(line,sizeof line,fp)!= NULL)
         {
             token=strtok(line,"\n\t\r ");  //get the instruction mnemonic or label
-
 //========================================   FIRST PASS  ======================================================
             while (token)
             {
@@ -108,7 +106,7 @@ int main(int argc, char *argv[])
                     else                                                           //if the second operand is not decimal or hexadecimal, it is a laber or a variable.
                     {                                                               //in this case, the 2nd 16-bits of the ldi instruction cannot be generated.
                         lditable[noofldis].location = counter;                 //record the location of this 2nd 16-bit  
-                        op1=(char*)malloc(sizeof(op2));                         //and the name of the label/variable that it must contain
+                        op1=(char*)malloc(strlen(op2) + 1);                         //and the name of the label/variable that it must contain
                         strcpy(op1,op2);                                        //in the lditable array.
                         lditable[noofldis].name = op1;
                         noofldis++;                                             
@@ -134,7 +132,7 @@ int main(int argc, char *argv[])
                 else if (strcmp(token,"jz")==0) //------------- CONDITIONAL JUMP ------------------
                 {
                     op1 = strtok(NULL, "\n\t\r ");
-                    op2 = (char*)malloc(sizeof(op1));
+                    op2 = (char*)malloc(strlen(op1) + 1);
                     strcpy(op2, op1);
                     jumptable[noofjumps].name = op2;
                     jumptable[noofjumps++].location = counter;
@@ -144,7 +142,7 @@ int main(int argc, char *argv[])
                 {
                     op1 = strtok(NULL,"\n\t\r ");            //read the label string
                     jumptable[noofjumps].location = counter;    //write the jz instruction's location into the jumptable 
-                    op2=(char*)malloc(sizeof(op1));         //allocate space for the label                  
+                    op2=(char*)malloc(strlen(op1) + 1);         //allocate space for the label                  
                     strcpy(op2,op1);                //copy the label into the allocated space
                     jumptable[noofjumps].name=op2;            //point to the label from the jumptable
                     noofjumps++;                    //skip to the next empty location in jumptable
@@ -220,17 +218,16 @@ int main(int argc, char *argv[])
                 }
                 else //------WHAT IS ENCOUNTERED IS NOT AN INSTRUCTION BUT A LABEL. UPDATE THE LABEL TABLE--------
                 {
-                    op1=(char*)malloc(sizeof(token));
+                    op1=(char*)malloc(strlen(token) + 1);
                     strcpy(op1,token);
                     labeltable[nooflabels].name=op1;
                     labeltable[nooflabels++].location = counter;  //read the label and update labeltable.
                 } 
 
                 token = strtok(NULL,",\n\t\r ");  // if what is read before is an instruction, this will be NULL
-                                                  //if what is read before is an label, this will be an opcode.
+                                                //if what is read before is an label, this will be an opcode.
             }
         }
-
 
 //================================= SECOND PASS ==============================
 
@@ -253,7 +250,6 @@ int main(int argc, char *argv[])
             if (strcmp(token,".data")==0 )
                 break;
         }
-
 // process the .data segment and generate the variabletable[] array.
         int dataarea=0;
         while(fgets(line,sizeof line,fp)!= NULL)
@@ -265,26 +261,33 @@ int main(int argc, char *argv[])
             {                
                 token[strlen(token)-1]='\0';  //will not cause memory leak, as we do not do malloc
                 variabletable[noofvariables].location=counter+dataarea;
-                op1=(char*)malloc(sizeof(token));
+                op1=(char*)malloc(strlen(token) + 1);
                 strcpy(op1,token);
                 variabletable[noofvariables].name=op1;
                 token = strtok(NULL,",\n\t\r ");
+
                 if (token==NULL)
                     program[counter+dataarea]=0;
                 else if (strcmp(token, ".space")==0)
                 {
                     token=strtok(NULL,"\n\t\r ");
-                    dataarea+=atoi(token);
+                    int len = atoi(token);
+
+                    for(int i = 0; i < len; ++i)
+                        program[counter+dataarea+i] = 0;
+
+                    dataarea += len;
+                    ++noofvariables;
+                    continue;
                 }
                 else if((token[0]=='0')&&(token[1]=='x')) 
                     program[counter+dataarea]=hex2int(token+2)&0xffff; 
                 else if ((  (token[0])=='-') || ('0'<=(token[0])&&(token[0]<='9'))  )
-                    program[counter+dataarea]=atoi(token)&0xffff;  
+                    program[counter+dataarea]=atoi(token)&0xffff;
                 ++noofvariables;
                 ++dataarea;
             }
         }
-
 
 // supply the address fields for the ldi instructions from the variable table
         for( i=0; i<noofldis;i++)
@@ -311,8 +314,7 @@ int main(int argc, char *argv[])
 
 
 //display the resulting tables
-
-    /*
+    
         printf("LABEL TABLE\n");
         for (i=0;i<nooflabels;i++)
             printf("%d %s\n", labeltable[i].location, labeltable[i].name);    
@@ -330,12 +332,33 @@ int main(int argc, char *argv[])
             printf("%d %s\n", lditable[i].location, lditable[i].name);    
         printf("\n");
 
-    */
-
         fclose(fp);
-        //fp = fopen("program","w");
-        printf("v2.0 raw\n");
+
+        op1 = (char*)malloc(strlen(argv[1]) + 1);
+        strcpy(op1, argv[1]);
+        op1 = strtok(op1, ".");
+        fp = fopen(op1,"w");
+
+        free(op1);
+
+        fprintf(fp,"v2.0 raw\n");
         for (i=0;i<counter+dataarea;i++)
-            printf("%04x\n",program[i]);
-    }    
+            fprintf(fp,"%04x\n",program[i]);
+        
+        fclose(fp);
+
+        for (i = 0; i < nooflabels; i++)
+            free(labeltable[i].name);
+
+        for (i = 0; i < noofvariables; i++)
+            free(variabletable[i].name);
+
+        for (i = 0; i < noofjumps; i++)
+            free(jumptable[i].name);
+
+        for (i = 0; i < noofldis; i++)
+            free(lditable[i].name);
+    }
+
+    return 0;
 }
