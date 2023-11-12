@@ -1,0 +1,33 @@
+.data
+	n: 10
+	fibonacci: .space 10
+	sum: 
+.code
+	ldi 0 0
+	ldi 1 0x0001
+	ldi 2 n
+	ld 2 2
+	ldi 3 2
+	sub 2 2 3
+	ldi 4 0
+	ldi 5 1
+	ldi 6 fibonacci
+	st 6 0
+	inc 6
+	st 6 1
+	inc 6
+loop 	sub 3 2 4
+	jz loopend
+	mov 7 0
+	mov 0 1
+	add 1 1 7
+	add 5 5 1
+	st 6 1
+	inc 6
+	inc 4
+	jmp loop
+loopend ldi 4 sum
+	st 4 5
+inf	jmp inf
+	
+	

@@ -41,7 +41,6 @@ int main(int argc, char *argv[])
     int program[1000];
     int counter=0;  //holds the address of the machine code instruction
 
-
     struct label_or_variable  
     {
         int location;
@@ -79,8 +78,7 @@ int main(int argc, char *argv[])
     int noofldis=0;
 
 
-    char* programname = argv[1];
-    fp = fopen(programname,"r");    //first command line argument is the name of the program
+    fp = fopen(argv[1],"r");    //first command line argument is the name of the program
 
     if (fp != NULL)
     {
@@ -335,10 +333,9 @@ int main(int argc, char *argv[])
     */
 
         fclose(fp);
-        char* binaryfile = strtok(programname, ".");
-        fp = fopen(binaryfile,"w");
-        fprintf(fp,"v2.0 raw\n");
+        //fp = fopen("program","w");
+        printf("v2.0 raw\n");
         for (i=0;i<counter+dataarea;i++)
-            fprintf(fp,"%04x\n",program[i]);
+            printf("%04x\n",program[i]);
     }    
 }
